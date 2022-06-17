@@ -8,7 +8,7 @@ import { store } from "./redux/store";
 import "./styles/utils.css";
 
 const client = new ApolloClient({
-  uri: "https://rocky-spire-87730.herokuapp.com/",
+  uri: "https://rocky-dawn-88046.herokuapp.com/",
   cache: new InMemoryCache(),
 });
 
