@@ -54,6 +54,5 @@
   "devDependencies": {
     "@types/dompurify": "^2.3.3",
     "@types/styled-components": "^5.1.24"
-  },
-  "proxy": "https://rocky-dawn-88046.herokuapp.com/"
+  }
 }
