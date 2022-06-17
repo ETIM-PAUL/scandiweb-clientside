@@ -7,7 +7,7 @@ import ProductDetails from "./components/Product-Details";
 import Cart from "./components/Cart/Index";
 
 export const client = new ApolloClient({
-  uri: "http://localhost:4000/",
+  uri: "https://rocky-dawn-88046.herokuapp.com/",
   cache: new InMemoryCache(),
 });
 
