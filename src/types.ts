@@ -30,6 +30,7 @@ product: Product;
 imagePreview: string;
 attributes: any;
 attributesLength: number;
+loading: boolean;
 }
 
 export interface Product {

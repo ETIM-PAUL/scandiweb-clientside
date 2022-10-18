@@ -109,8 +109,8 @@ class TopNav extends React.Component<TopNavProps, TopNavTypes> {
         <Heading>
           <Menu>
             {this.state.categories.length > 0 &&
-              this.state.categories?.map((cat: any) => (
-                <Link to={"/"} className="links">
+              this.state.categories?.map((cat: any, index) => (
+                <Link to={"/"} className="links" key={index}>
                   {this.props.category === cat.name ? (
                     <Green
                       id={cat.name}
@@ -165,8 +165,8 @@ class TopNav extends React.Component<TopNavProps, TopNavTypes> {
               </CurrencySwitcher>
               {this.state.currencySwitchDisplay && (
                 <CurrencyHolder>
-                  {this.state.currencies?.map((cur: any) => (
-                    <CurrencyContainer>
+                  {this.state.currencies?.map((cur: any, index) => (
+                    <CurrencyContainer key={index}>
                       <Currency
                         onClick={(e: any) => {
                           this.selectedCurrencyType(e.target.id);

@@ -22,7 +22,7 @@ import { mapDispatchToProps, mapStateToProps } from "./utils";
 
 class ProductsListing extends React.Component<
   { category: string; currency: string; addToCart: any; getTotals: any },
-  { products: []; category: string; currency: string }
+  { products: []; category: string; currency: string, loading: boolean }
 > {
   constructor(props: any) {
     super(props);
@@ -30,6 +30,7 @@ class ProductsListing extends React.Component<
       products: [],
       category: this.props.category,
       currency: this.props.currency,
+      loading: true,
     };
   }
 
@@ -57,6 +58,7 @@ class ProductsListing extends React.Component<
         this.setState({
           products: result.data.category?.products,
           category: result.data.category?.name,
+          loading: false,
         });
       });
     } catch (error) {
@@ -81,52 +83,50 @@ class ProductsListing extends React.Component<
       <FirstContainer>
         <Heading>{this.props.category}</Heading>
         <CardsContainer>
-          {this.state.products?.length >= 0 &&
-            this.state.products.map((x: CardPropsTypes) => (
-              <>
-                <Card key={x.name}>
-                  <Banner>
-                    <Link to={`/product/${x.id}`}>
-                      <img
-                        src={x.gallery[0]}
-                        height={320}
-                        width={400}
-                        alt="Product Img"
-                      />
-                      {x.inStock === false && (
-                        <WaterMark>Out of stock</WaterMark>
-                      )}
-                    </Link>
-                    {x.inStock === true && (
-                      <Cart onClick={() => this.addProductToCart(x)}>
-                        <img src={cart} alt="add product" />
-                      </Cart>
+          {(this.state.products?.length >= 0 && !this.state.loading) ?
+            (this.state.products.map((x: CardPropsTypes) => (
+              <Card key={x.name}>
+                <Banner>
+                  <Link to={`/product/${x.id}`}>
+                    <img
+                      src={x.gallery[0]}
+                      height={320}
+                      style={{ width: "100%" }}
+                      alt="Product Img"
+                    />
+                    {x.inStock === false && (
+                      <WaterMark>Out of stock</WaterMark>
                     )}
-                  </Banner>
-                  <Link
-                    to={`/product/${x.id}`}
-                    style={{ textDecoration: "none" }}
-                  >
-                    <ProductInfo>
-                      <span>
-                        <CardTitle>{x.brand}</CardTitle>~{" "}
-                        <CardSubTitle>{x.name}</CardSubTitle>
-                      </span>
-                      {x.prices.map(
-                        (p: any) =>
-                          p.currency.symbol === this.props.currency && (
-                            <ProductPrice key={p.currency.symbol}>
-                              {p.currency.symbol}
-                              {p.amount}
-                            </ProductPrice>
-                          )
-                      )}
-                    </ProductInfo>
                   </Link>
-                  {x.inStock === false && <OverlayStyle />}
-                </Card>
-              </>
-            ))}
+                  {x.inStock === true && (
+                    <Cart onClick={() => this.addProductToCart(x)}>
+                      <img src={cart} alt="add product" />
+                    </Cart>
+                  )}
+                </Banner>
+                <Link
+                  to={`/product/${x.id}`}
+                  style={{ textDecoration: "none" }}
+                >
+                  <ProductInfo>
+                    <span>
+                      <CardTitle>{x.brand}</CardTitle>~{" "}
+                      <CardSubTitle>{x.name}</CardSubTitle>
+                    </span>
+                    {x.prices.map(
+                      (p: any) =>
+                        p.currency.symbol === this.props.currency && (
+                          <ProductPrice key={p.currency.symbol}>
+                            {p.currency.symbol}
+                            {p.amount}
+                          </ProductPrice>
+                        )
+                    )}
+                  </ProductInfo>
+                </Link>
+                {/* {x.inStock === false && <OverlayStyle />} */}
+              </Card>
+            ))) : (<div><span>Loading Data</span></div>)}
         </CardsContainer>
       </FirstContainer>
     );

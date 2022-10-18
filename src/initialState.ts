@@ -49,4 +49,6 @@ export const initialDetails = {
   imagePreview: "",
   attributes: {},
   attributesLength: 0,
+  loading: true,
+
 }

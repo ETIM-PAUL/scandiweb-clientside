@@ -71,6 +71,8 @@ class ProductDetails extends React.Component<
       this.setState({
         product: res.data.product,
         imagePreview: res.data.product.gallery[0],
+        loading: false,
+
       });
       this.predefinedAttributes();
     });
@@ -82,94 +84,95 @@ class ProductDetails extends React.Component<
     });
     return (
       <DetailsContainer>
-        <>
-          <ProductImages>
-            {this.state.product.gallery.length >= 1 &&
-              this.state.product.gallery?.map((img) => (
-                <ImageHover
-                  key={img}
-                  src={img}
-                  alt="product-img"
-                  onMouseOver={() => this.setState({ imagePreview: img })}
-                />
-              ))}
-          </ProductImages>
+        {!this.state.loading ?
+          <>
+            <ProductImages>
+              {this.state.product.gallery.length >= 1 &&
+                this.state.product.gallery?.map((img) => (
+                  <ImageHover
+                    key={img}
+                    src={img}
+                    alt="product-img"
+                    onMouseOver={() => this.setState({ imagePreview: img })}
+                  />
+                ))}
+            </ProductImages>
 
-          <ProductImage>
-            <img
-              src={this.state.imagePreview}
-              alt="product-img-preview"
-              className="image"
-            />
-          </ProductImage>
+            <ProductImage>
+              <img
+                src={this.state.imagePreview}
+                alt="product-img-preview"
+                className="image"
+              />
+            </ProductImage>
 
-          <ProductInfo>
-            <NoStyleDiv>
-              <ProductBrand>{this.state.product.brand}</ProductBrand>
-              <ProductName>{this.state.product.name}</ProductName>
-            </NoStyleDiv>
-
-            {this.state.product.attributes.map((attr) => (
-              <NoStyleDiv key={attr.id}>
-                <AttributeName>{attr.name}:</AttributeName>
-                <AttributeStyle>
-                  {attr.type === "swatch" &&
-                    attr.items.map((itm) => (
-                      <AttributeSwatch
-                        color={`${itm.id}`}
-                        key={itm.id}
-                        className={
-                          itm.id === this.state.attributes[attr.name]
-                            ? "swatchSelected"
-                            : null
-                        }
-                        onClick={() => this.setAttributes(itm, attr.name)}
-                      />
-                    ))}
-
-                  {attr.type !== "swatch" &&
-                    attr.items.map((itm) => (
-                      <AttributeButton
-                        key={itm.id}
-                        className={
-                          itm.id === this.state.attributes[attr.name]
-                            ? "selected"
-                            : null
-                        }
-                        onClick={() => this.setAttributes(itm, attr.name)}
-                      >
-                        {itm.value}
-                      </AttributeButton>
-                    ))}
-                </AttributeStyle>
+            <ProductInfo>
+              <NoStyleDiv>
+                <ProductBrand>{this.state.product.brand}</ProductBrand>
+                <ProductName>{this.state.product.name}</ProductName>
               </NoStyleDiv>
-            ))}
 
-            <Attribute>PRICE:</Attribute>
-            {this.state.product.prices.map(
-              (p) =>
-                p.currency.symbol === this.props.currency && (
-                  <ProductPrice key={p.currency.symbol}>
-                    {p.currency.symbol}
-                    {p.amount}
-                  </ProductPrice>
-                )
-            )}
+              {this.state.product.attributes.map((attr) => (
+                <NoStyleDiv key={attr.id}>
+                  <AttributeName>{attr.name}:</AttributeName>
+                  <AttributeStyle>
+                    {attr.type === "swatch" &&
+                      attr.items.map((itm) => (
+                        <AttributeSwatch
+                          color={`${itm.id}`}
+                          key={itm.id}
+                          className={
+                            itm.id === this.state.attributes[attr.name]
+                              ? "swatchSelected"
+                              : ""
+                          }
+                          onClick={() => this.setAttributes(itm, attr.name)}
+                        />
+                      ))}
 
-            {this.state.product.inStock === true && (
-              <AddButton
-                type="submit"
-                onClick={() => this.addProductToCart(this.state.product)}
-              >
-                ADD TO CART
-              </AddButton>
-            )}
-            {this.state.product.inStock !== true && (
-              <OutOfStock type="button">OUT OF STOCK</OutOfStock>
-            )}
-            <ProductParse>{parse(cleanHTML)}</ProductParse>
-          </ProductInfo>
-        </>
+                    {attr.type !== "swatch" &&
+                      attr.items.map((itm) => (
+                        <AttributeButton
+                          key={itm.id}
+                          className={
+                            itm.id === this.state.attributes[attr.name]
+                              ? "selected"
+                              : ""
+                          }
+                          onClick={() => this.setAttributes(itm, attr.name)}
+                        >
+                          {itm.value}
+                        </AttributeButton>
+                      ))}
+                  </AttributeStyle>
+                </NoStyleDiv>
+              ))}
+
+              <Attribute>PRICE:</Attribute>
+              {this.state.product.prices.map(
+                (p) =>
+                  p.currency.symbol === this.props.currency && (
+                    <ProductPrice key={p.currency.symbol}>
+                      {p.currency.symbol}
+                      {p.amount}
+                    </ProductPrice>
+                  )
+              )}
+
+              {this.state.product.inStock === true && (
+                <AddButton
+                  type="submit"
+                  onClick={() => this.addProductToCart(this.state.product)}
+                >
+                  ADD TO CART
+                </AddButton>
+              )}
+              {this.state.product.inStock !== true && (
+                <OutOfStock type="button">OUT OF STOCK</OutOfStock>
+              )}
+              <ProductParse>{parse(cleanHTML)}</ProductParse>
+            </ProductInfo>
+          </> : (<div><span>Loading Data</span></div>)}
       </DetailsContainer>
     );
   }
